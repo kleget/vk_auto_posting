@@ -1,0 +1,15 @@
+[Unit]
+Description=vkscript
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/PROJECT/vk_script
+ExecStart=/root/vk_project/venv/bin/python3 /root/vk_project/vk_script/main.py
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
