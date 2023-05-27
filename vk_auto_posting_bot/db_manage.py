@@ -18,6 +18,11 @@ async def db_select_2(system, id):
         sql.execute(f"SELECT * FROM users WHERE chat_id == '{str(id)}' AND systemes == '{system}'")
         return sql.fetchall()
 
+async def db_select_3(system, id):
+    with sq.connect(f'{pat}db_main.db') as con:
+        sql = con.cursor()
+        sql.execute(f"SELECT state FROM users WHERE chat_id == '{str(id)}' AND systemes == '{system}'")
+        return sql.fetchall()
 async def db_select_all(sys, id):
     with sq.connect(f'{pat}db_main.db') as con:
         sql = con.cursor()

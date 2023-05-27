@@ -84,6 +84,9 @@ params_list = \
 'Группы доноры',
 'Состояние']
 
+stata = {'ON': '✅',
+        'OFF': '❌'}
+
 params_dict_for_db = \
 {'Ключевые слова': 'Keywords',
 'Запретные слова': 'Forbidden_words',
