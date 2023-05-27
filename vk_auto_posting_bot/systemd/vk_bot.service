@@ -6,8 +6,8 @@ After=network.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/root/vk_project/vk_auto_posting_bot
-ExecStart=/root/vk_project/venv/bin/python3 /root/vk_project/vk_auto_posting_bot/main.py
+WorkingDirectory=/root/PROJECT/vk_auto_posting_bot
+ExecStart=/root/PROJECT/venv/bin/python3 /root/PROJECT/vk_auto_posting_bot/main.py
 RestartSec=10
 Restart=always
 
