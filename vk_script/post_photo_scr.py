@@ -18,7 +18,7 @@ def save_r(group_id, upload_response, access_token):
                                           'server': upload_response['server'],
                                           'hash': upload_response['hash'],
                                           'v': v}).json()
-    print(save_result)
+    # print(save_result)
     return (f"photo{str(save_result['response'][0]['owner_id'])}_{str(save_result['response'][0]['id'])}&access_key={str(save_result['response'][0]['access_key'])}")
 
 def glavnaya(text, img_url, group_id, access_token, osnova):
@@ -30,7 +30,7 @@ def glavnaya(text, img_url, group_id, access_token, osnova):
                                        'access_token': access_token,
                                        'from_group': '1',
                                        'v': v}).json()
-        print(result2)
+        # print(result2)
     else:
         img = requests.get(url=img_url)
         i = img_url[42:60]

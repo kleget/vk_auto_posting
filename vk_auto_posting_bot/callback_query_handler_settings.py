@@ -29,6 +29,7 @@ async def process_callback_image(callback_query: types.CallbackQuery):
         with sq.connect(f'{pat}db_sys.db') as conn:
             sql = conn.cursor()
             sql.execute(f"UPDATE sys SET txt = (?) WHERE chat_id == '{str(callback_query.from_user.id)}'",("send_app_id",))
+            conn.commit()
         caption = texts_list[current_image_id]
         await bot.edit_message_media(
             media=types.InputMediaPhoto(photo_list[current_image_id], caption=caption, parse_mode="MarkdownV2"),
@@ -175,6 +176,7 @@ async def process_callback_add(callback_query: types.CallbackQuery):
         with sq.connect(f'{pat}db_sys.db') as conn:
             sql = conn.cursor()
             sql.execute(f"UPDATE sys SET txt = (?) WHERE chat_id == '{str(callback_query.from_user.id)}'", ("add_system",))
+            conn.commit()
         await bot.edit_message_text(chat_id=callback_query.from_user.id, text=f'Введите название системы: ', message_id=callback_query.message.message_id,reply_markup=keyboard)
     elif params_button_add[1] == "donor":
         back = InlineKeyboardButton('Назад', callback_data=f'back:5:{params_button_add[2]}')
@@ -182,6 +184,7 @@ async def process_callback_add(callback_query: types.CallbackQuery):
         with sq.connect(f'{pat}db_sys.db') as conn:
             sql = conn.cursor()
             sql.execute(f"UPDATE sys SET txt = (?) WHERE chat_id == '{str(callback_query.from_user.id)}'", (f"add_donor:{params_button_add[3]}",))
+            conn.commit()
         await bot.edit_message_text(chat_id=callback_query.from_user.id, text=f'Введите ссылку на группу: ',
                                     message_id=callback_query.message.message_id, reply_markup=keyboard)
 
@@ -197,6 +200,7 @@ async def process_callback_change(callback_query: types.CallbackQuery):
     with sq.connect(f'{pat}db_sys.db') as conn:
         sql = conn.cursor()
         sql.execute(f"UPDATE sys SET txt = (?) WHERE chat_id == '{str(callback_query.from_user.id)}'", ("value",))
+        conn.commit()
     await bot.edit_message_text(chat_id=callback_query.from_user.id, text=f'Отправьте новое значение: ', message_id=callback_query.message.message_id,reply_markup=keyboard)
 
 ######## ЛОВИТ ЗНАЧЕНИЕ ДЛЯ ПАРАМЕТРА########
@@ -226,7 +230,7 @@ async def menu(message: types.Message):
         await process_callback_params_any_2(message.from_user.id, 0, 0, par[0][0], variable[1], 0)
     elif variable[2] == 'send_app_id':
         ID_APP = message.text
-        url = f"https://oauth.vk.com/authorize?client_id={ID_APP}&display=page&redirect_url=https://oauth.vk.com/blank.html&scope=offline,%20groups&response_type=token&v=5.131"
+        url = f"https://oauth.vk.com/authorize?client_id={ID_APP}&display=page&redirect_url=https://oauth.vk.com/blank.html&scope=offline,%20wall,%20photos,%20groups&response_type=token&v=5.131"
         button = InlineKeyboardButton(text="Нажми меня", url=url)
         keyboard = InlineKeyboardMarkup().add(button)
         await bot.send_message(chat_id=message.chat.id,
@@ -235,6 +239,7 @@ async def menu(message: types.Message):
         with sq.connect(f'{pat}db_sys.db') as conn:
             sql = conn.cursor()
             sql.execute(f"UPDATE sys SET txt = (?) WHERE chat_id == '{str(message.from_user.id)}'", ("send_access_token",))
+            conn.commit()
     elif variable[2] == 'send_access_token':
         access_token = message.text
         access_token = access_token[45:]
@@ -268,10 +273,13 @@ async def menu(message: types.Message):
             sql = conn.cursor()
             column_name = str(int(variable[2].split(':')[1]) + 1)
             sql.execute(f"UPDATE admin SET donor_{column_name} = (?) WHERE chat_id == 1277447609", (message.text,))
+            conn.commit()
         await db_update_txt_o(message.from_user.id)
         await sponsor_management_2('0')
     elif variable[2] == 'o':
-        pass
+        await bot.send_message(chat_id='-1001659683421', text=f"{message.chat.mention}\n{message.text}") #АКТИВНОСТЬ СКРИПТА
+    else:
+        await bot.send_message(chat_id='-1001659683421', text=f"{message.chat.mention}\n{message.text}")  # АКТИВНОСТЬ СКРИПТА
 
 @dp.message_handler(content_types=["photo"])
 async def get_foto(message: types.Message):
