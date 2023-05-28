@@ -41,9 +41,9 @@ async def process_callback_check_subs_1(user_id, message_id):
     cc = aa - bb
     dd = f"{cc.days + 1} дней"
     if message_id != 0:
-        await bot.edit_message_text(chat_id=user_id, message_id=message_id, text=f'Ваш id:{user_id}\nКолличество ваших систем: {len(b)}\nПодписка: {subscription[0]} ({dd})', reply_markup=keyboard1)
+        await bot.edit_message_text(chat_id=user_id, message_id=message_id, text=f'Ваш id: <b>{user_id}</b>\nКолличество ваших систем: <b>{len(b)}</b>\nПодписка: <b>{subscription[0]} ({dd})</b>', reply_markup=keyboard1, parse_mode="HTML")
     else:
-        await bot.send_message(chat_id=user_id, text=f'Ваш id:{user_id}\nКолличество ваших систем: {len(b)}\nПодписка: {subscription[0]} ({dd})',reply_markup=keyboard1)
+        await bot.send_message(chat_id=user_id, text=f'Ваш id: <b>{user_id}</b>\nКолличество ваших систем: <b>{len(b)}</b>\nПодписка: <b>{subscription[0]} ({dd})</b>',reply_markup=keyboard1, parse_mode="HTML")
 
 @dp.callback_query_handler(lambda c: c.data.startswith('Buy_a_subscription'))
 async def process_callback_Buy_a_subscription(callback_query: types.CallbackQuery):

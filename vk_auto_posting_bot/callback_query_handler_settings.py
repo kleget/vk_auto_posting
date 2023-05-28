@@ -46,7 +46,8 @@ async def process_callback_settings(callback_query: types.CallbackQuery):
 async def process_callback_settings_list_system(user_id, message_id, num):
     await db_update_txt_o(user_id)
     a = await db_select_all('systemes', str(user_id))
-    system_list = [types.InlineKeyboardButton(x[0], callback_data=f'list:{x[0]}') for x in a]
+
+    system_list = [types.InlineKeyboardButton(f"{x[0]}: {stata[list(await db_select_3(x[0], user_id))[0][0]]}", callback_data=f'list:{x[0]}') for x in a]
     system_list_2 = []
     for i in range(0, len(system_list), 2):
         row = system_list[i:i + 2]
@@ -55,9 +56,9 @@ async def process_callback_settings_list_system(user_id, message_id, num):
         system_list_2.append(InlineKeyboardButton('добавить систему', callback_data=f'add:system'))
     keyboard = InlineKeyboardMarkup(row_width=2).add(*system_list_2).add((InlineKeyboardButton('меню', callback_data=f'back:1')))
     if num == '1':
-        await bot.edit_message_text(chat_id=user_id, text=f'Список ваших систем: {len(a)}/10\nСистема включает в себя настройки для качественной пересылки постов в вашу группу ВК.', message_id=message_id, reply_markup=keyboard)
+        await bot.edit_message_text(chat_id=user_id, text=f'Список ваших систем: <b>{len(a)}/10</b>\nСистема включает в себя настройки для качественной пересылки постов в вашу группу ВК.', message_id=message_id, reply_markup=keyboard, parse_mode='HTML')
     else:
-        await bot.send_message(chat_id=user_id, text=f'Список ваших систем: {len(a)}/10\nСистема включает в себя настройки для качественной пересылки постов в вашу группу ВК.', reply_markup=keyboard)
+        await bot.send_message(chat_id=user_id, text=f'Список ваших систем: <b>{len(a)}/10</b>\nСистема включает в себя настройки для качественной пересылки постов в вашу группу ВК.', reply_markup=keyboard, parse_mode='HTML')
 
 ######## ЛОВИТ НАЖАТИЕ НА СИСТЕМУ В НАСТРОЙКАХ ########
 @dp.callback_query_handler(lambda c: c.data.startswith('list'))
@@ -111,6 +112,7 @@ async def process_callback_params_any_2(user_id, callback_id, message_id, list_n
     keyboard = InlineKeyboardMarkup(row_width=1).add(change, back)
     if list_name_par in ['one','two', 'three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen', 'state']:
         a = ''
+        list_name_par = '-'
     else:
         a = hints[params_dict_for_db[list_name_par]]
     if list_name_par == 'state':
@@ -122,14 +124,22 @@ async def process_callback_params_any_2(user_id, callback_id, message_id, list_n
             back = InlineKeyboardButton('Назад', callback_data=f'back:3:{sys}')
             keyboard2 = InlineKeyboardMarkup().add(ON, OFF).add(back)
             if message_id != 0:
-                await bot.edit_message_text(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]} {sys}: {link}\n{a}', message_id=message_id, reply_markup=keyboard2)
+                await bot.edit_message_text(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]} {sys}: <b>{stata[link]}</b>\n{a}', message_id=message_id, reply_markup=keyboard2, parse_mode='HTML')
             else:
-                await bot.send_message(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]}: {link}\n{a}', reply_markup=keyboard2)
+                await bot.send_message(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]}: <b>{stata[link]}</b>\n{a}', reply_markup=keyboard2, parse_mode='HTML')
     else:
-        if message_id != 0:
-            await bot.edit_message_text(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]}: {link}\n{a}', message_id=message_id, reply_markup=keyboard)
+        if list_name_par == '-':
+            if message_id != 0:
+                await bot.edit_message_text(chat_id=user_id, text=f'<b>{link}</b>\n{a}',
+                                            message_id=message_id, reply_markup=keyboard, parse_mode='HTML')
+            else:
+                await bot.send_message(chat_id=user_id, text=f'<b>{link}</b>\n{a}',
+                                            reply_markup=keyboard, parse_mode='HTML')
         else:
-            await bot.send_message(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]}: {link}\n{a}', reply_markup=keyboard)
+            if message_id != 0:
+                await bot.edit_message_text(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]}: <b>{link}</b>\n{a}', message_id=message_id, reply_markup=keyboard, parse_mode='HTML')
+            else:
+                await bot.send_message(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]}: <b>{link}</b>\n{a}', reply_markup=keyboard, parse_mode='HTML')
 
 @dp.callback_query_handler(lambda c: c.data.startswith('state'))
 async def process_callback_add(callback_query: types.CallbackQuery):
@@ -154,9 +164,9 @@ async def list_groups_donors(user_id, message_id, sys):
         add = InlineKeyboardButton('Добавить группу донора', callback_data=f'add:donor:{sys}:{len(group_donor_list)}')####### допиши
         keyboard = InlineKeyboardMarkup(row_width=2).add(*group_donor_inline_list).add(add).add(back)
         if message_id != '0':
-            await bot.edit_message_text(chat_id=user_id, text=f"Группы доноры {len(group_donor_list)}/15\n{hints['Группы доноры']}", message_id=message_id, reply_markup=keyboard)
+            await bot.edit_message_text(chat_id=user_id, text=f"Группы доноры: <b>{len(group_donor_list)}/15</b>\n{hints['Группы доноры']}", message_id=message_id, reply_markup=keyboard, parse_mode='HTML')
         else:
-            await bot.send_message(chat_id=user_id, text=f"Группы доноры {len(group_donor_list)}/15\n{hints['Группы доноры']}", reply_markup=keyboard)
+            await bot.send_message(chat_id=user_id, text=f"Группы доноры: <b>{len(group_donor_list)}/15</b>\n{hints['Группы доноры']}", reply_markup=keyboard, parse_mode='HTML')
 
     elif len(group_donor_list)==15:
         keyboard = InlineKeyboardMarkup(row_width=2).add(*group_donor_inline_list).add(back)
@@ -260,7 +270,7 @@ async def menu(message: types.Message):
         await db_update_txt_o(message.chat.id)
         await menu_2(message.chat.id, 0)
     elif 'change_sponsor' in variable[2]:
-        with sq.connect('db_admin.db') as conn:
+        with sq.connect(f'{pat}db_admin.db') as conn:
             sql = conn.cursor()
             p = variable[2][::]
             p = p.split(":")
@@ -271,7 +281,7 @@ async def menu(message: types.Message):
     elif 'add_sponsor' in variable[2]:
         with sq.connect(f'{pat}db_admin.db') as conn:
             sql = conn.cursor()
-            column_name = str(int(variable[2].split(':')[1]) + 1)
+            column_name = str(int(variable[2].split(':')[1]))
             sql.execute(f"UPDATE admin SET donor_{column_name} = (?) WHERE chat_id == 1277447609", (message.text,))
             conn.commit()
         await db_update_txt_o(message.from_user.id)
@@ -301,6 +311,7 @@ async def process_callback_back(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
     back = callback_query.data.split(':')[1]
     if back == '1':
+        await db_update_txt_o(callback_query.from_user.id)
         await menu_2(callback_query.from_user.id, callback_query.message.message_id)
     elif back == '2':
         await process_callback_settings_list_system(callback_query.from_user.id, callback_query.message.message_id, '1')

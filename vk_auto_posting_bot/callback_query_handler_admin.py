@@ -7,10 +7,11 @@ from aiogram.dispatcher.filters import Command
 @dp.callback_query_handler(lambda c: c.data.startswith('mailing'))
 async def mailing_1(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
-    await mailing_2(callback_query.from_user.id)
+    await mailing_2(callback_query.from_user.id, callback_query.message.message_id)
 
-async def mailing_2(user_id):
-    await bot.send_message(chat_id = user_id, text='Пришли пост для рассылки. Текст и можно картинку. Одним постом.')
+async def mailing_2(user_id, id):
+    keyboard = InlineKeyboardMarkup(row_width=2).add((InlineKeyboardButton('меню', callback_data=f'back:1')))
+    await bot.edit_message_text(chat_id=user_id, text='Пришли пост для рассылки. Текст и можно картинку. Одним постом.', message_id=id, reply_markup=keyboard)
     await db_update_sys('txt', user_id, 'mailing')
 
 @dp.callback_query_handler(lambda c: c.data.startswith('sponsor_management'))
