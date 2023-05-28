@@ -25,15 +25,15 @@ async def sponsor_management_2(msg_id):
         sql.execute(f"SELECT * FROM admin WHERE chat_id == 1277447609")
         sponsor_list = sql.fetchall()
     sponsor_list = list(sponsor_list[0][1::])
-    if 'nonee' in sponsor_list:
+    if 'rm' in sponsor_list:
         with sq.connect(f'{pat}db_admin.db') as con:
             sql = con.cursor()
             sql.execute(f"SELECT * FROM admin WHERE chat_id == '1277447609'")
             a = list(sql.fetchall())
         a = list(a[0])
         del a[0]
-        while 'nonee' in a:
-            a.remove('nonee')
+        while 'rm' in a:
+            a.remove('rm')
         while '' in a:
             a.remove('')
         sponsor_list = a[::]
