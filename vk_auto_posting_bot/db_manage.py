@@ -28,7 +28,7 @@ async def db_select_all(sys, id):
         sql = con.cursor()
         sql.execute(f"SELECT {sys} FROM users WHERE chat_id == '{str(id)}'")
         return sql.fetchall()
-
+#
 async def db_select_with_sys(pole, id, sys):
     with sq.connect(f'{pat}db_main.db') as con:
         sql = con.cursor()

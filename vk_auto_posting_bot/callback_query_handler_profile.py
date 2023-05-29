@@ -184,7 +184,7 @@ async def process_callback_Pay(callback_query: types.CallbackQuery):
                                payload=l,
                                reply_markup=keyboard
                                )
-
+#
 ######## ХЗ ЧЕ ЭТО, НО БЕЗ НЕГО НЕ РАБОТАЕТ ########
 @dp.pre_checkout_query_handler()
 async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery):

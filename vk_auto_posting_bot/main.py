@@ -10,7 +10,7 @@ from work_with_VK_API import *
 @dp.message_handler(commands=['start'])
 async def start_com(message: types.Message):
     await bot.send_message(chat_id='-1001659683421', text=f"{message.chat.mention}") #АКТИВНОСТЬ СКРИПТА
-    await start(message.chat.id)
+    await start(message.chat.id)#
 
 @dp.message_handler(commands=['help'])
 async def start_com(message: types.Message):

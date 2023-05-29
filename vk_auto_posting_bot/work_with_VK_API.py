@@ -10,4 +10,4 @@ async def take_ID_group(url_group, id):
                                 "v": v,
                                 "screen_name": url_group[15:]
                             }).json()
-    return response['response']['object_id']
+    return response['response']['object_id']#

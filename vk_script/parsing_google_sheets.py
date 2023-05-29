@@ -16,7 +16,7 @@ def parsing_google_sheets_1():
 
 #ВОЗРАЩАЕТ ПАРАМЕТРЫ
 def parsing_google_sheets_2(num):
-    try:
+    try:#
         with sq.connect(f'{pat}db_main.db') as con:
             sql = con.cursor()
             sql.execute(f"SELECT * FROM users")

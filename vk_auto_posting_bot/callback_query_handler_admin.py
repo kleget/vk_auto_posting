@@ -90,4 +90,4 @@ async def add_sponsor_3(callback_query: types.CallbackQuery):
     await db_update_sys('txt', '1277447609', f'add_sponsor:{ff[1]}')
     keyboard = (InlineKeyboardButton('Назад', callback_data=f'back:7'))
     await bot.edit_message_text(chat_id='1277447609', message_id=callback_query.message.message_id, text='Отправь нового спонсора для добавления:', reply_markup=keyboard)
-
+#asdf

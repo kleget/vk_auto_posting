@@ -68,7 +68,7 @@ def glavnaya(text, img_url, group_id, access_token, osnova):
     print(f"https://vk.com/{osnova}?w=wall-{group_id}_{result2['response']['post_id']}\n\n")
     loop = asyncio.get_event_loop()
     loop.run_until_complete(mmmmm(f"https://vk.com/{osnova}?w=wall-{group_id}_{result2['response']['post_id']}\n\n", osnova, result2['response']['post_id']))
-
+#
 async def mmmmm(a, osnova, b):
     ke = InlineKeyboardButton(f"link", url=a)
     keyboard = InlineKeyboardMarkup(row_width=1).add(ke)
