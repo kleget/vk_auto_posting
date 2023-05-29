@@ -112,7 +112,6 @@ async def process_callback_params_any_2(user_id, callback_id, message_id, list_n
     keyboard = InlineKeyboardMarkup(row_width=1).add(change, back)
     if list_name_par in ['one','two', 'three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen', 'state']:
         a = ''
-        list_name_par = '-'
     else:
         a = hints[params_dict_for_db[list_name_par]]
     if list_name_par == 'state':
@@ -128,18 +127,10 @@ async def process_callback_params_any_2(user_id, callback_id, message_id, list_n
             else:
                 await bot.send_message(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]}: <b>{stata[link]}</b>\n{a}', reply_markup=keyboard2, parse_mode='HTML')
     else:
-        if list_name_par == '-':
-            if message_id != 0:
-                await bot.edit_message_text(chat_id=user_id, text=f'<b>{link}</b>\n{a}',
-                                            message_id=message_id, reply_markup=keyboard, parse_mode='HTML')
-            else:
-                await bot.send_message(chat_id=user_id, text=f'<b>{link}</b>\n{a}',
-                                            reply_markup=keyboard, parse_mode='HTML')
+        if message_id != 0:
+            await bot.edit_message_text(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]}: <b>{link}</b>\n{a}', message_id=message_id, reply_markup=keyboard, parse_mode='HTML')
         else:
-            if message_id != 0:
-                await bot.edit_message_text(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]}: <b>{link}</b>\n{a}', message_id=message_id, reply_markup=keyboard, parse_mode='HTML')
-            else:
-                await bot.send_message(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]}: <b>{link}</b>\n{a}', reply_markup=keyboard, parse_mode='HTML')
+            await bot.send_message(chat_id=user_id, text=f'{params_dict_for_db[list_name_par]}: <b>{link}</b>\n{a}', reply_markup=keyboard, parse_mode='HTML')
 
 @dp.callback_query_handler(lambda c: c.data.startswith('state'))
 async def process_callback_add(callback_query: types.CallbackQuery):
@@ -205,7 +196,10 @@ async def process_callback_change(callback_query: types.CallbackQuery):
     list_name_change = callback_query.data.split(':')[1]
     sys = callback_query.data.split(':')[2]
     await db_update('any_msg', callback_query.from_user.id, list_name_change, sys)
-    back = InlineKeyboardButton('Назад', callback_data=f'back:5:{sys}')
+    if list_name_change == "Группы доноры":
+        back = InlineKeyboardButton('Назад', callback_data=f'back:5:{sys}')
+    else:
+        back = InlineKeyboardButton('Назад', callback_data=f'back:4:{sys}')
     keyboard = InlineKeyboardMarkup(row_width=1).add(back)
     with sq.connect(f'{pat}db_sys.db') as conn:
         sql = conn.cursor()
