@@ -73,5 +73,6 @@ async def mmmmm(a, osnova, b):
     ke = InlineKeyboardButton(f"link", url=a)
     keyboard = InlineKeyboardMarkup(row_width=1).add(ke)
     await bot.send_message(chat_id='1277447609', text=f"{osnova}_{b}", reply_markup=keyboard)
-    # keyboard = InlineKeyboardButton(f"{osnova}_{b}", url=a)
-    # await bot.send_message(chat_id='1277447609', text=a, reply_markup=keyboard)
+
+async def xxx(a):
+    await bot.send_message(chat_id='1277447609', text=a)

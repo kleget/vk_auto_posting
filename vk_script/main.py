@@ -221,14 +221,22 @@ def timi(po):
     if po >= 3600:
         k = int((po - 3600) / 60)
         if e2 + k >= 60:
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(xxx(f"{e1 + 2}:{e2 + k - 60} ({po/60} min)"))
             print(f"{e1 + 2}:{e2 + k - 60} ({po/60} min)")
         else:
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(xxx(f"{e1 + 1}:{e2 + k} ({po/60} min)"))
             print(f"{e1 + 1}:{e2 + k} ({po/60} min)")
     else:
         k = int(po / 60)
         if e2 + k >= 60:
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(xxx(f"{e1 + 1}:{e2 + k - 60} ({po/60} min)"))
             print(f"{e1 + 1}:{e2 + k - 60} ({po/60} min)")
         else:
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(xxx(f"{e1}:{e2 + k} ({po/60} min)"))
             print(f"{e1}:{e2 + k} ({po/60} min)")
 
 if __name__ == "__main__":

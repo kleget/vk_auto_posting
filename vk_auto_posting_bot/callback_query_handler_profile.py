@@ -15,7 +15,6 @@ async def process_callback_check_subs(callback_query: types.CallbackQuery):
         await subscription_verification_send_link(callback_query.from_user.id)
 
 async def process_callback_check_subs_1(user_id, message_id):
-
     with sq.connect(f'{pat}db_main.db') as con:
         sql = con.cursor()
         sql.execute(f"SELECT * FROM users WHERE chat_id == {str(user_id)}")
@@ -29,21 +28,15 @@ async def process_callback_check_subs_1(user_id, message_id):
         if float(subscription[0]) <= time.time():
             await db_update_sys('subscription', user_id, 'отсутствует')
             button1 = InlineKeyboardButton(text="Купить подписку", callback_data='Buy_a_subscription:Buy')
-            subscription = ['отсутствует']
+            subscription= ['отсутствует']
         else:
             subscription = [f"до {c.day}.{c.month}.{c.year}"]
             button1 = InlineKeyboardButton(text="Продлить подписку", callback_data='Buy_a_subscription:renewal')
     keyboard1 = InlineKeyboardMarkup(row_width=1).add(button1, back)
-
-    a = subscription[0][3::].split('.')[::-1]
-    aa = dt.date(int(a[0]), int(a[1]), int(a[2]))
-    bb = dt.date.today()
-    cc = aa - bb
-    dd = f"{cc.days + 1} дней"
     if message_id != 0:
-        await bot.edit_message_text(chat_id=user_id, message_id=message_id, text=f'Ваш id: <b>{user_id}</b>\nКолличество ваших систем: <b>{len(b)}</b>\nПодписка: <b>{subscription[0]} ({dd})</b>', reply_markup=keyboard1, parse_mode="HTML")
+        await bot.edit_message_text(chat_id=user_id, message_id=message_id, text=f'Ваш id: <b>{user_id}</b>\nКолличество ваших систем: <b>{len(b)}</b>\nПодписка: <b>{subscription[0]}</b>', reply_markup=keyboard1, parse_mode="HTML")
     else:
-        await bot.send_message(chat_id=user_id, text=f'Ваш id: <b>{user_id}</b>\nКолличество ваших систем: <b>{len(b)}</b>\nПодписка: <b>{subscription[0]} ({dd})</b>',reply_markup=keyboard1, parse_mode="HTML")
+        await bot.send_message(chat_id=user_id, text=f'Ваш id: <b>{user_id}</b>\nКолличество ваших систем: <b>{len(b)}</b>\nПодписка: <b>{subscription[0]}</b>',reply_markup=keyboard1, parse_mode="HTML")
 
 @dp.callback_query_handler(lambda c: c.data.startswith('Buy_a_subscription'))
 async def process_callback_Buy_a_subscription(callback_query: types.CallbackQuery):
@@ -79,14 +72,20 @@ async def process_callback_Pay(callback_query: types.CallbackQuery):
     if pay_num[1] == '1':
         keyboard.add(InlineKeyboardButton("Заплатить 500,00 RUB", pay=True))
         keyboard.add(back)
+
         if pay_num[2] == 'Buy':
             t='Оформление подписки на 1 месяц'
-            d='1 месяц подписки'
+            c = datetime.utcfromtimestamp(float(time.time()+day_to_sec(31)))
+            d=f"до {c.day}.{c.month}.{c.year}"
             l='Оформление подписки на 1 месяц'
         elif pay_num[2] == 'renewal':
             t = 'Продление подписки на 1 месяц'
-            d = '1 месяц подписки'
+            subscripti = await db_select_sys('subscription', callback_query.from_user.id)
+            c = datetime.utcfromtimestamp(float(subscripti[0]) + day_to_sec(31))
+            d=f"до {c.day}.{c.month}.{c.year}"
             l = 'Продление подписки на 1 месяц'
+
+
         await bot.send_invoice(chat_id=callback_query.from_user.id,
                          title=t,
                          description=d,
@@ -106,11 +105,14 @@ async def process_callback_Pay(callback_query: types.CallbackQuery):
         keyboard.add(back)
         if pay_num[2] == 'Buy':
             t='Оформление подписки на 3 месяца'
-            d='3 месяца подписки'
+            c = datetime.utcfromtimestamp(float(time.time() + day_to_sec(92)))
+            d = f"до {c.day}.{c.month}.{c.year}"
             l='Оформление подписки на 3 месяца'
         elif pay_num[2] == 'renewal':
             t = 'Продление подписки на 3 месяца'
-            d = '3 месяца подписки'
+            subscripti = await db_select_sys('subscription', callback_query.from_user.id)
+            c = datetime.utcfromtimestamp(float(subscripti[0]) + day_to_sec(92))
+            d = f"до {c.day}.{c.month}.{c.year}"
             l = 'Продление подписки на 3 месяца'
         await bot.send_invoice(chat_id=callback_query.from_user.id,
                                title=t,
@@ -131,11 +133,14 @@ async def process_callback_Pay(callback_query: types.CallbackQuery):
         keyboard.add(back)
         if pay_num[2] == 'Buy':
             t='Оформление подписки на 6 месяцев'
-            d='6 месяцев подписки'
+            c = datetime.utcfromtimestamp(float(time.time() + day_to_sec(182)))
+            d = f"до {c.day}.{c.month}.{c.year}"
             l='Оформление подписки на 6 месяцев'
         elif pay_num[2] == 'renewal':
             t = 'Продление подписки на 6 месяцев'
-            d = '6 месяцев подписки'
+            subscripti = await db_select_sys('subscription', callback_query.from_user.id)
+            c = datetime.utcfromtimestamp(float(subscripti[0]) + day_to_sec(182))
+            d = f"до {c.day}.{c.month}.{c.year}"
             l = 'Продление подписки на 6 месяцев'
         await bot.send_invoice(chat_id=callback_query.from_user.id,
                                title=t,
@@ -156,11 +161,14 @@ async def process_callback_Pay(callback_query: types.CallbackQuery):
         keyboard.add(back)
         if pay_num[2] == 'Buy':
             t='Оформление подписки на 12 месяцев'
-            d='12 месяцев подписки'
+            c = datetime.utcfromtimestamp(float(time.time() + day_to_sec(365)))
+            d = f"до {c.day}.{c.month}.{c.year}"
             l='Оформление подписки на 12 месяцев'
         elif pay_num[2] == 'renewal':
             t = 'Продление подписки на 12 месяцев'
-            d = '12 месяцев подписки'
+            subscripti = await db_select_sys('subscription', callback_query.from_user.id)
+            c = datetime.utcfromtimestamp(float(subscripti[0]) + day_to_sec(365))
+            d = f"до {c.day}.{c.month}.{c.year}"
             l = 'Продление подписки на 12 месяцев'
         await bot.send_invoice(chat_id=callback_query.from_user.id,
                                title=t,
