@@ -1,5 +1,5 @@
 [Unit]
-Description=vkscript
+Description=vk_script
 After=syslog.target
 After=network.target
 
@@ -7,7 +7,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/root/PROJECT/vk_script
-ExecStart=/root/vk_project/venv/bin/python3 /root/vk_project/vk_script/main.py
+ExecStart=/root/PROJECT/venv/bin/python3 /root/PROJECT/vk_script/main.py
 RestartSec=10
 Restart=always
 

@@ -1,4 +1,4 @@
-pat = 'D:/PROJECT/'
+pat = '/root/PROJECT/'
 
 ######## AIOGRAM ########
 from aiogram.types.message import ContentType
