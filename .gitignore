@@ -1,0 +1,14 @@
+vk_script/config.py
+vk_auto_posting_bot/importt.py
+venv
+db_admin.db
+db_main.db
+db_sys.db
+vk_script/IMG
+vk_script/systemd
+vk_script/credentials.json
+vk_script/params.txt
+vk_script/req.txt
+vk_auto_posting_bot/systemd
+vk_auto_posting_bot/credentials.json
+vk_auto_posting_bot/__init__.py
