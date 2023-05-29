@@ -12,3 +12,4 @@ vk_script/req.txt
 vk_auto_posting_bot/systemd
 vk_auto_posting_bot/credentials.json
 vk_auto_posting_bot/__init__.py
+'cription=vk_bot'
