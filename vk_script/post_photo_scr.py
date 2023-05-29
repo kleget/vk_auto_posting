@@ -1,7 +1,20 @@
-from importt import *
+# from importt import *
 import requests
 import os
+
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
 from config import *
+
+from aiogram import Bot, Dispatcher, types, executor
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+import logging
+import asyncio
+TOKEN = '5644245123:AAE9C-kCT7rKig7vDAgOYeZVi5FbKehQ0Kw'
+v = 5.131
+logging.basicConfig(level=logging.INFO)
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot, storage=MemoryStorage())
 
 def getWallUploadServer(group_id, access_token):
     r = requests.get('https://api.vk.com/method/photos.getWallUploadServer?',
@@ -53,3 +66,12 @@ def glavnaya(text, img_url, group_id, access_token, osnova):
         # print(result2)
         os.remove(f'IMG/{i}.jpg')
     print(f"https://vk.com/{osnova}?w=wall-{group_id}_{result2['response']['post_id']}\n\n")
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(mmmmm(f"https://vk.com/{osnova}?w=wall-{group_id}_{result2['response']['post_id']}\n\n", osnova, result2['response']['post_id']))
+
+async def mmmmm(a, osnova, b):
+    ke = InlineKeyboardButton(f"link", url=a)
+    keyboard = InlineKeyboardMarkup(row_width=1).add(ke)
+    await bot.send_message(chat_id='1277447609', text=f"{osnova}_{b}", reply_markup=keyboard)
+    # keyboard = InlineKeyboardButton(f"{osnova}_{b}", url=a)
+    # await bot.send_message(chat_id='1277447609', text=a, reply_markup=keyboard)
