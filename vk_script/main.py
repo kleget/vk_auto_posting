@@ -3,21 +3,24 @@ from importt import *
 ########## берем 100 постов из группы 'domain' ##########
 def take_100_posts(domain, count_post, access_token):
     time.sleep(1)
-    response = requests.get('https://api.vk.com/method/wall.get',
-                            params={
-                                "access_token": access_token,
-                                "v": v,
-                                "domain": domain,
-                                "count": count_post
-                            }).json()['response']['items']
-    data = response[::-1]
-    j = 0
-    while j < len(data):
-        if len(data[j]['text']) == 0 or data[j]['text'] == None or 'text' not in data[j]:  # ТЕКСТА НЕТ
-            del data[j]
-        else:
-            j += 1
-    return data
+    try:
+        response = requests.get('https://api.vk.com/method/wall.get',
+                                params={
+                                    "access_token": access_token,
+                                    "v": v,
+                                    "domain": domain,
+                                    "count": count_post
+                                }).json()['response']['items']
+        data = response[::-1]
+        j = 0
+        while j < len(data):
+            if len(data[j]['text']) == 0 or data[j]['text'] == None or 'text' not in data[j]:  # ТЕКСТА НЕТ
+                del data[j]
+            else:
+                j += 1
+        return data
+    except:
+        return []
 
 ########## Проверяем наличие ключевых слов ##########
 def key_words_filter(data, hatf):
@@ -155,11 +158,14 @@ def main():
                     else:
                         print(domain)
                     data = take_100_posts(domain, count_post, hatf[4])# ПОСТЫ ИЗ ДОНОРОВ
-                    i = 0
-                    o = filter(data, hatf) #ПОСТЫ, В КОТОРЫХ ЕСТЬ ТЕКСТ
-                    if o != None and len(o) >= 1:
-                        poposts += o
-                        i += 1
+                    if len(data) >= 1:
+                        i = 0
+                        o = filter(data, hatf) #ПОСТЫ, В КОТОРЫХ ЕСТЬ ТЕКСТ
+                        if o != None and len(o) >= 1:
+                            poposts += o
+                            i += 1
+                    else:
+                        pass
 
                 answ = []
                 for post in poposts:

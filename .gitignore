@@ -13,3 +13,7 @@ vk_auto_posting_bot/systemd
 vk_auto_posting_bot/credentials.json
 vk_auto_posting_bot/__init__.py
 'cription=vk_bot'
+vk_auto_posting_bot/test.py
+vk_auto_posting_bot/req.txt
+vk_script/__pycache__
+vk_auto_posting_bot/__pycache__
