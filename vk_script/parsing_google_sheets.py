@@ -51,12 +51,13 @@ def parsing_google_sheets_2(num):
                 b[num][1] = b[num][1].split('+')
             if b[num][2] != 'empty':
                 b[num][2] = b[num][2].split('+')
-            return [b[num][1],
-                    b[num][2],
-                    b[num][3][15:], #
-                    b[num][4],#
-                    token,
-                    b[num][5]]
+            return [b[num][1], #keywords
+                    b[num][2], # forbidden words
+                    b[num][3][15:], # link on basis
+                    b[num][4],# #hashtag
+                    token, # access_token
+                    b[num][5], #count_posts
+                    b[num][6]] #chat_id
     except:
         time.sleep(0.01)
         parsing_google_sheets_2(num)

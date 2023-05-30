@@ -137,58 +137,77 @@ def main():
         while True:
             num = parsing_google_sheets_1()
             for w in range(0, num):
-                open('params.txt', 'w').close()
-                hatf = parsing_google_sheets_2(w)
-                if hatf == "STOP":
-                    continue
-                print(f"-------- https://vk.com/{hatf[2]} --------")
-                c = open('params.txt', 'r', encoding='utf-8')
-                params = c.readlines()
-                c.close()
-                data_f = take_100_posts(hatf[2], int(hatf[5]), hatf[4])  # ПОСТЫ ИЗ ОСНОВЫ
-                poposts = []
-                for z in range(len(params)):
-                    pppp = params[z]
-                    pppp = re.sub("['|[|]|\\n|]", "", pppp).split(' ')
-                    count_post = int(pppp[0])
-                    domain = pppp[1]
-                    group_id = int(pppp[2])
-                    if z+1 != len(params):
-                        print(domain, end=', ')
+                # with sq.connect(f'{pat}db_sys.db') as con:
+                #     sql = con.cursor()
+                #     sql.execute(f"SELECT subscription FROM sys WHERE chat_id == '{str(id)}'")
+                #     subscription =  sql.fetchone()
+                # # c = datetime.utcfromtimestamp(float(subscription[0]))
+                # if float(subscription[0]) <= time.time():
+                #     print(f"подписка истекла {w}")
+                #     continue
+                # else:
+                    open('params.txt', 'w').close()
+                    hatf = parsing_google_sheets_2(w)
+                    if hatf == "STOP":
+                        continue
+                    with sq.connect(f'{pat}db_sys.db') as con:
+                        sql = con.cursor()
+                        sql.execute(f"SELECT subscription FROM sys WHERE chat_id == '{str(hatf[6])}'")
+                        subscription =  sql.fetchone()
+                    if float(subscription[0]) <= time.time():
+                        loop = asyncio.get_event_loop()
+                        loop.run_until_complete(fff(hatf[6], hatf[2]))
+                        print(f"подписка истекла. ID: {hatf[6]} Group: {hatf[2]}")
+                        continue
                     else:
-                        print(domain)
-                    data = take_100_posts(domain, count_post, hatf[4])# ПОСТЫ ИЗ ДОНОРОВ
-                    if len(data) >= 1:
-                        i = 0
-                        o = filter(data, hatf) #ПОСТЫ, В КОТОРЫХ ЕСТЬ ТЕКСТ
-                        if o != None and len(o) >= 1:
-                            poposts += o
-                            i += 1
-                    else:
-                        pass
+                        print(f"-------- https://vk.com/{hatf[2]} --------")
+                        c = open('params.txt', 'r', encoding='utf-8')
+                        params = c.readlines()
+                        c.close()
+                        data_f = take_100_posts(hatf[2], int(hatf[5]), hatf[4])  # ПОСТЫ ИЗ ОСНОВЫ
+                        poposts = []
+                        for z in range(len(params)):
+                            pppp = params[z]
+                            pppp = re.sub("['|[|]|\\n|]", "", pppp).split(' ')
+                            count_post = int(pppp[0])
+                            domain = pppp[1]
+                            group_id = int(pppp[2])
+                            if z+1 != len(params):
+                                print(domain, end=', ')
+                            else:
+                                print(domain)
+                            data = take_100_posts(domain, count_post, hatf[4])# ПОСТЫ ИЗ ДОНОРОВ
+                            if len(data) >= 1:
+                                i = 0
+                                o = filter(data, hatf) #ПОСТЫ, В КОТОРЫХ ЕСТЬ ТЕКСТ
+                                if o != None and len(o) >= 1:
+                                    poposts += o
+                                    i += 1
+                            else:
+                                pass
 
-                answ = []
-                for post in poposts:
-                    similarity_found = False
-                    post_split = post.split('%&*')
-                    ww = deleting_hashtag(post_split[0]).lower()
-                    # print(data_f)
-                    if data_f is not None:
-                        for datas in data_f:
-                            rr = deleting_hashtag(datas['text']).lower()
-                            similarity = difflib.SequenceMatcher(None, rr, ww).ratio() * 100 #На сколько процентов текст из основы совпадает с текстом из донора
-                            if similarity > 25:
-                                similarity_found = True
-                                break
-                    if similarity_found == False:
-                        answ.append(f"{deleting_hashtag(post_split[0])}%&*{post_split[1]}")
+                        answ = []
+                        for post in poposts:
+                            similarity_found = False
+                            post_split = post.split('%&*')
+                            ww = deleting_hashtag(post_split[0]).lower()
+                            # print(data_f)
+                            if data_f is not None:
+                                for datas in data_f:
+                                    rr = deleting_hashtag(datas['text']).lower()
+                                    similarity = difflib.SequenceMatcher(None, rr, ww).ratio() * 100 #На сколько процентов текст из основы совпадает с текстом из донора
+                                    if similarity > 25:
+                                        similarity_found = True
+                                        break
+                            if similarity_found == False:
+                                answ.append(f"{deleting_hashtag(post_split[0])}%&*{post_split[1]}")
 
-                if len(answ) > 0:
-                    poster(answ, group_id=group_id, hatf=hatf)
-                    poposts.clear()
-                    answ.clear()
-                else:
-                    print('________NO POST________\n\n')
+                        if len(answ) > 0:
+                            poster(answ, group_id=group_id, hatf=hatf)
+                            poposts.clear()
+                            answ.clear()
+                        else:
+                            print('________NO POST________\n\n')
 
         ########## ОТПРАВЛЯЕТ СКРИПТ В СОН ##########
             po = random.randint(110*60, 140*60)

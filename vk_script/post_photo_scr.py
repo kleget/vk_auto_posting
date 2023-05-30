@@ -76,3 +76,6 @@ async def mmmmm(a, osnova, b):
 
 async def xxx(a):
     await bot.send_message(chat_id='1277447609', text=a)
+
+async def fff(a, b):
+    await bot.send_message(chat_id='1277447609', text=f"подписка истекла. ID: {a} Group: {b}")
