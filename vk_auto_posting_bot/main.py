@@ -50,7 +50,7 @@ async def manual(id, name_sys):
         sql = con.cursor()
         sql.execute("INSERT INTO sys (chat_id, systemes, txt, subscription) VALUES (?, ?, ?, ?)", (str(id), 'first', 'o', str(time.time()+day_to_sec(14))))
         await bot.send_message(chat_id=id, text='Вам выдана бесплатная подписка на 14 дней.\nСпасибо, что вы с нами!☺️')
-    await bot.send_message(chat_id=id, text='Пройдите настроку, это займет 1 минут')
+    await bot.send_message(chat_id=id, text='Пройдите настроку, это займет около 5 минут.')
     next_button = InlineKeyboardButton('>>', callback_data='image:2')
     keyboard = InlineKeyboardMarkup(row_width=1).add(next_button)
     caption = texts_list[1]
@@ -199,18 +199,3 @@ async def notos():
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
-    # thread1 = Thread(target=lambda: asyncio.run(notos()))
-    # thread2 = Thread(target=lambda: executor.start_polling(dp, skip_updates=True))
-    # thread1.start()
-    # thread2.start()
-
-    # loop = asyncio.get_event_loop()
-    # thread1 = Thread(target=lambda: loop.run_until_complete(notos()))
-    # thread2 = Thread(target=lambda: executor.start_polling(dp, skip_updates=True))
-    # thread1.start()
-    # thread2.start()
-
-    # loop = asyncio.new_event_loop()
-    # asyncio.set_event_loop(loop)
-    # thread = Thread(target=lambda: loop.run_until_complete(my_function()))
-    # thread.start()
