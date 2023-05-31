@@ -226,7 +226,7 @@ async def process_pay (message: types.Message):
         await db_update_sys('subscription', message.from_user.id, subscripti[0][0]+day_to_sec(365))
         await process_callback_check_subs_1(message.from_user.id, 0)
 
-def day_to_sec(day):
+def day_to_sec(day):# возвраящает дни в секундах
     return day*60*60*24+3600*3
 
 @dp.callback_query_handler(lambda c: c.data.startswith('backpr'))

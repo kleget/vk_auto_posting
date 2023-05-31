@@ -1,3 +1,6 @@
+import asyncio
+from threading import Thread
+
 from callback_query_handler_settings import *
 from callback_query_handler_profile import *
 from callback_query_handler_admin import *
@@ -10,7 +13,13 @@ from work_with_VK_API import *
 @dp.message_handler(commands=['start'])
 async def start_com(message: types.Message):
     await bot.send_message(chat_id='-1001659683421', text=f"{message.chat.mention}") #АКТИВНОСТЬ СКРИПТА
+
     await start(message.chat.id)#
+
+@dp.message_handler(commands=['check'])
+async def check(message: types.Message):
+    if message.chat.id == 1277447609:
+        await notos()
 
 @dp.message_handler(commands=['help'])
 async def start_com(message: types.Message):
@@ -73,6 +82,8 @@ async def menu_2(id, message_id):
         profile = InlineKeyboardButton('профиль 👤', callback_data='profile')
         mailing = InlineKeyboardButton('рассылка', callback_data='mailing')
         sponsor_management = InlineKeyboardButton('управление спонсорами', callback_data='sponsor_management')
+        # if
+        # notos = InlineKeyboardButton('notos', callback_data='notos')
         keyboard = InlineKeyboardMarkup(row_width=1).add(profile, settings, mailing, sponsor_management)
     else:
         settings = InlineKeyboardButton('настройки ⚙', callback_data='settings')
@@ -162,6 +173,44 @@ async def process_callback_check_subs(callback_query: types.CallbackQuery):
     else:
         await subscription_verification_send_link(callback_query.from_user.id)
 
+async def notos():
+    while True:
+        await asyncio.sleep(3600*24)
+        with sq.connect(f'{pat}db_sys.db') as con:
+            sql = con.cursor()
+            sql.execute(f"SELECT chat_id FROM sys")
+            arr_id = sql.fetchall()
+        for i in range(len(arr_id)):
+            with sq.connect(f'{pat}db_sys.db') as con:
+                sql = con.cursor()
+                sql.execute(f"SELECT subscription FROM sys WHERE chat_id = {str(arr_id[i][0])}")
+                sybss = sql.fetchone()
+                if sybss != 'отсутствует':
+                    one = float(day_to_sec(1))
+                    two = float(day_to_sec(2))
+                    three = float(day_to_sec(3))
+                    now = time.time()
+                    if float(sybss[0]) <= now+one:
+                        await bot.send_message(chat_id = arr_id[i][0], text = 'До окончания подписки осталось меньше 1 дня. Для непрерывной работы сервиса продлите подписку.')
+                    elif float(sybss[0]) <= now+two:
+                        await bot.send_message(chat_id = arr_id[i][0], text = 'До окончания подписки осталось меньше 2 деней. Для непрерывной работы сервиса продлите подписку.')
+                    elif float(sybss[0]) <= now+three:
+                        await bot.send_message(chat_id = arr_id[i][0], text = 'До окончания подписки осталось меньше 3 деней. Для непрерывной работы сервиса продлите подписку.')
+
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
+    # thread1 = Thread(target=lambda: asyncio.run(notos()))
+    # thread2 = Thread(target=lambda: executor.start_polling(dp, skip_updates=True))
+    # thread1.start()
+    # thread2.start()
 
+    # loop = asyncio.get_event_loop()
+    # thread1 = Thread(target=lambda: loop.run_until_complete(notos()))
+    # thread2 = Thread(target=lambda: executor.start_polling(dp, skip_updates=True))
+    # thread1.start()
+    # thread2.start()
+
+    # loop = asyncio.new_event_loop()
+    # asyncio.set_event_loop(loop)
+    # thread = Thread(target=lambda: loop.run_until_complete(my_function()))
+    # thread.start()
