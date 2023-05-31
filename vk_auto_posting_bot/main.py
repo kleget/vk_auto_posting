@@ -175,7 +175,7 @@ async def process_callback_check_subs(callback_query: types.CallbackQuery):
 
 async def notos():
     while True:#
-        await asyncio.sleep(3600*24)
+        await asyncio.sleep(3600*24)#
         with sq.connect(f'{pat}db_sys.db') as con:
             sql = con.cursor()
             sql.execute(f"SELECT chat_id FROM sys")
