@@ -124,11 +124,11 @@ def poster(answ, group_id,  hatf):
         # p = True
         if t1 != '***': #есть текст есть\нет картинки
             if hashteg != 'empty': # есть указанные хэштеги, значит удалям старые из поста и добавляем новые
-                glavnaya(f"{t1}\n\n{hashteg}", t2, group_id, hatf[4], hatf[2])
+                glavnaya(f"{t1}\n\n{hashteg}", t2, group_id, hatf[4], hatf[2], hatf[6])
                 ho = False
                 break
             else: # нет указынных хэштегов, значит мы просто удалям их из поста и ничего нового не добавляем
-                glavnaya(t1, t2, group_id, hatf[4], hatf[2])
+                glavnaya(t1, t2, group_id, hatf[4], hatf[2], hatf[6])
         h += 1
 
 ##########  ##########
@@ -247,20 +247,24 @@ def timi(po):
         k = int((po - 3600) / 60)
         if e2 + k >= 60:
             loop = asyncio.get_event_loop()
+            asyncio.set_event_loop(loop)
             loop.run_until_complete(xxx(f"{e1 + 2}:{e2 + k - 60} ({po/60} min)"))
             print(f"{e1 + 2}:{e2 + k - 60} ({po/60} min)")
         else:
             loop = asyncio.get_event_loop()
+            asyncio.set_event_loop(loop)
             loop.run_until_complete(xxx(f"{e1 + 1}:{e2 + k} ({po/60} min)"))
             print(f"{e1 + 1}:{e2 + k} ({po/60} min)")
     else:
         k = int(po / 60)
         if e2 + k >= 60:
             loop = asyncio.get_event_loop()
+            asyncio.set_event_loop(loop)
             loop.run_until_complete(xxx(f"{e1 + 1}:{e2 + k - 60} ({po/60} min)"))
             print(f"{e1 + 1}:{e2 + k - 60} ({po/60} min)")
         else:
             loop = asyncio.get_event_loop()
+            asyncio.set_event_loop(loop)
             loop.run_until_complete(xxx(f"{e1}:{e2 + k} ({po/60} min)"))
             print(f"{e1}:{e2 + k} ({po/60} min)")
 

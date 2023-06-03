@@ -26,7 +26,10 @@ async def process_callback_check_subs_1(user_id, message_id):
     else:
         c = datetime.utcfromtimestamp(float(subscription[0]))
         if float(subscription[0]) <= time.time():
-            await db_update_sys('subscription', user_id, 'отсутствует')
+            try:
+                await db_update_sys('subscription', user_id, 'отсутствует')
+            except:
+                pass
             await bot.send_message(chat_id=user_id, text='Ваша подписка истекла. Продлите ее, чтобы продолжать пользоваться нашим сервисом.')
             button1 = InlineKeyboardButton(text="Купить подписку", callback_data='Buy_a_subscription:Buy')
             subscription= ['отсутствует']

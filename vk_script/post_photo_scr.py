@@ -10,6 +10,7 @@ from aiogram import Bot, Dispatcher, types, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import logging
 import asyncio
+
 TOKEN = '5644245123:AAE9C-kCT7rKig7vDAgOYeZVi5FbKehQ0Kw'
 v = 5.131
 logging.basicConfig(level=logging.INFO)
@@ -32,9 +33,11 @@ def save_r(group_id, upload_response, access_token):
                                           'hash': upload_response['hash'],
                                           'v': v}).json()
     # print(save_result)
-    return (f"photo{str(save_result['response'][0]['owner_id'])}_{str(save_result['response'][0]['id'])}&access_key={str(save_result['response'][0]['access_key'])}")
-
-def glavnaya(text, img_url, group_id, access_token, osnova):
+    try:
+        return (f"photo{str(save_result['response'][0]['owner_id'])}_{str(save_result['response'][0]['id'])}&access_key={str(save_result['response'][0]['access_key'])}")
+    except:
+        return 'ERROR'
+def glavnaya(text, img_url, group_id, access_token, osnova, id):
     upload_url = getWallUploadServer(group_id, access_token)
     if img_url == 'nonono':
         result2 = requests.get('https://api.vk.com/method/wall.post?',
@@ -54,28 +57,42 @@ def glavnaya(text, img_url, group_id, access_token, osnova):
         file = {'file1': open(f'IMG/{i}.jpg', 'rb')}
         upload_response = requests.post(upload_url, files=file).json()
         save_result = save_r(group_id, upload_response, access_token)
-        file['file1'].close()
+        if save_result != 'ERROR':
+            file['file1'].close()
 
-        result2 = requests.get('https://api.vk.com/method/wall.post?',
-                                 params ={'attachments': save_result,
-                                          "message": text,
-                                          'owner_id': -group_id,
-                                          'access_token': access_token,
-                                          'from_group': '1',
-                                          'v': v}).json()
-        # print(result2)
-        os.remove(f'IMG/{i}.jpg')
-    print(f"https://vk.com/{osnova}?w=wall-{group_id}_{result2['response']['post_id']}\n\n")
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(mmmmm(f"https://vk.com/{osnova}?w=wall-{group_id}_{result2['response']['post_id']}\n\n", osnova, result2['response']['post_id']))
+            result2 = requests.get('https://api.vk.com/method/wall.post?',
+                                     params ={'attachments': save_result,
+                                              "message": text,
+                                              'owner_id': -group_id,
+                                              'access_token': access_token,
+                                              'from_group': '1',
+                                              'v': v}).json()
+            # print(result2)
+            os.remove(f'IMG/{i}.jpg')
+    try:
+        print(f"https://vk.com/{osnova}?w=wall-{group_id}_{result2['response']['post_id']}\n\n")
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(mmmmm(f"https://vk.com/{osnova}?w=wall-{group_id}_{result2['response']['post_id']}\n\n", osnova, result2['response']['post_id'], id))
+    except:
+        print()
 #
-async def mmmmm(a, osnova, b):
+async def mmmmm(a, osnova, b, id):
     ke = InlineKeyboardButton(f"link", url=a)
     keyboard = InlineKeyboardMarkup(row_width=1).add(ke)
     await bot.send_message(chat_id='1277447609', text=f"{osnova}_{b}", reply_markup=keyboard)
+    await bot.send_message(chat_id=id, text=f"{osnova}_{b}", reply_markup=keyboard)
 
 async def xxx(a):
-    await bot.send_message(chat_id='1277447609', text=a)
+    await bot.send_message(chat_id=1277447609, text=a)
 
+import sqlite3 as sq
 async def fff(a, b):
+    try:
+        with sq.connect(f'{pat}db_sys.db') as con:
+            sql = con.cursor()
+            sql.execute(f"UPDATE sys SET subscription = (?) WHERE chat_id == '{a}'", 'отсутствует',)
+            con.commit()
+    except:
+        pass
+    await bot.send_message(chat_id=a, text='Сейчас бы произошел автопост, но ваша подписка истекла. Продлите ее, чтобы сервис продолжил работу.')
     await bot.send_message(chat_id='1277447609', text=f"подписка истекла. ID: {a} Group: {b}")
