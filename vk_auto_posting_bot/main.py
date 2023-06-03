@@ -31,9 +31,9 @@ async def start_com(message: types.Message):
 ######## ПРОВЕРЯЕТ НАЛИЧИЕ В БД И ОТПРАВЛЯЕТ ПЕРВУЮ СТРАНИЦУ ИНСТРУКЦИИ ########
 async def start(id):
     if await subscription_verification(id) == True:
-        with sq.connect(f'{pat}db_main.db') as con:
+        with sq.connect(f'{pat}db_sys.db') as con:
             sql = con.cursor()
-            sql.execute(f"SELECT chat_id FROM users WHERE chat_id == {str(id)}")
+            sql.execute(f"SELECT access_token FROM sys WHERE chat_id == {str(id)}")
             if sql.fetchone() is None:
                 name_sys = 'first'
                 await manual(id, name_sys)
