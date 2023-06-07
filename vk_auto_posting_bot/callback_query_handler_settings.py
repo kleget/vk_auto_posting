@@ -11,7 +11,17 @@ class SYSTEM(StatesGroup):
 async def process_callback_image(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
     current_image_id = int(callback_query.data.split(':')[1])
-    if current_image_id <= 6 and current_image_id >= 1:
+    if current_image_id == 1:
+        keyboard = InlineKeyboardMarkup(row_width=2)
+        next_button = InlineKeyboardButton('>>', callback_data=f'image:{current_image_id + 1}')
+        keyboard.add(next_button)
+        caption = texts_list[current_image_id]
+        await bot.edit_message_media(
+            media=types.InputMediaPhoto(photo_list[current_image_id], caption=caption, parse_mode="MarkdownV2"),
+            chat_id=callback_query.message.chat.id,
+            message_id=callback_query.message.message_id,
+            reply_markup=keyboard)
+    if current_image_id <= 6 and current_image_id >= 2:
         keyboard = InlineKeyboardMarkup(row_width=2)
         prev_button = InlineKeyboardButton('<<', callback_data=f'image:{current_image_id - 1}')
         next_button = InlineKeyboardButton('>>', callback_data=f'image:{current_image_id + 1}')
