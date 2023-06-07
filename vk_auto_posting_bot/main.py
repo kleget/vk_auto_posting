@@ -1,11 +1,6 @@
 import asyncio
-from threading import Thread
-
 from callback_query_handler_settings import *
 from callback_query_handler_profile import *
-from callback_query_handler_admin import *
-
-from importt import *
 from work_with_VK_API import *
 # from subscription_verification import *
 
@@ -13,17 +8,22 @@ from work_with_VK_API import *
 @dp.message_handler(commands=['start'])
 async def start_com(message: types.Message):
     await bot.send_message(chat_id='-1001659683421', text=f"{message.chat.mention}") #АКТИВНОСТЬ СКРИПТА
-
     await start(message.chat.id)#
 
 @dp.message_handler(commands=['check'])
 async def check(message: types.Message):
     if message.chat.id == 1277447609:
         await notos()
-
+@dp.message_handler(commands=['innovations'])
+async def check(message: types.Message):
+    menu = InlineKeyboardButton(text="меню", callback_data='back_p:3')
+    keyboard = InlineKeyboardMarkup().add(menu)
+    await bot.send_message(chat_id=message.chat.id, text=inovation,
+                           reply_markup=keyboard)
+    
 @dp.message_handler(commands=['help'])
 async def start_com(message: types.Message):
-    menu = InlineKeyboardButton(text="меню", callback_data='back_p:1')
+    menu = InlineKeyboardButton(text="меню", callback_data='back_p:3')
     keyboard = InlineKeyboardMarkup().add(menu)
     await bot.send_message(chat_id=message.chat.id, text='Если у Вас есть вопросы или вам нужна помощь: @kleget', reply_markup=keyboard) #АКТИВНОСТЬ СКРИПТА
     # await start(message.chat.id)
@@ -50,7 +50,8 @@ async def manual(id, name_sys):
         sql = con.cursor()
         sql.execute("INSERT INTO sys (chat_id, systemes, txt, subscription) VALUES (?, ?, ?, ?)", (str(id), 'first', 'o', str(time.time()+day_to_sec(14))))
         await bot.send_message(chat_id=id, text='Вам выдана бесплатная подписка на 14 дней.\nСпасибо, что вы с нами!☺️')
-    await bot.send_message(chat_id=id, text='Пройдите настроку, это займет около 5 минут.')
+    # await bot.send_message(chat_id=id, text='Пройдите настройку, это займет не больше 5 минут и сэкономит вам десятки часов работы!')
+    await bot.send_message(chat_id=id, text='Пройдите настройку бота всего за 5 минут и сэкономьте себе десятки часов времени!')
     next_button = InlineKeyboardButton('>>', callback_data='image:2')
     keyboard = InlineKeyboardMarkup(row_width=1).add(next_button)
     caption = texts_list[1]

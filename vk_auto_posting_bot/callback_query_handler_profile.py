@@ -1,9 +1,6 @@
-import time
-
 from importt import *
 import main
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, LabeledPrice
-from aiogram.dispatcher.filters import Command
 
 ######## ЛОВИТ НАЖАТИЕ КНОПКИ ПРОВЕРИТЬ ПОДПИСКУ И ПРОВЕРЯЕТ ЕЁ ########
 @dp.callback_query_handler(lambda c: c.data.startswith('profile'))
@@ -74,126 +71,190 @@ async def process_callback_Pay(callback_query: types.CallbackQuery):
     t, d, l = '-', '-', '-'
     back = InlineKeyboardButton(text="Назад", callback_data=f'backpr:2:{pay_num[2]}')
     if pay_num[1] == '1':
-        keyboard.add(InlineKeyboardButton("Заплатить 500,00 RUB", pay=True))
+        keyboard.add(InlineKeyboardButton("Заплатить 500.00 RUB", pay=True))
         keyboard.add(back)
 
         if pay_num[2] == 'Buy':
             t='Оформление подписки на 1 месяц'
             c = datetime.utcfromtimestamp(float(time.time()+day_to_sec(31)))
-            d=f"до {c.day}.{c.month}.{c.year}"
-            l='Оформление подписки на 1 месяц'
+            d=f"Подписка до {c.day}.{c.month}.{c.year}"
         elif pay_num[2] == 'renewal':
             t = 'Продление подписки на 1 месяц'
             subscripti = await db_select_sys('subscription', callback_query.from_user.id)
             c = datetime.utcfromtimestamp(float(subscripti[0]) + day_to_sec(31))
-            d=f"до {c.day}.{c.month}.{c.year}"
-            l = 'Продление подписки на 1 месяц'
-
-
+            d=f"Подписка до {c.day}.{c.month}.{c.year}"
         await bot.send_invoice(chat_id=callback_query.from_user.id,
-                         title=t,
-                         description=d,
-                         provider_token=YOOTOKEN,
-                         currency='RUB',
-                         photo_url=None,
-                         need_phone_number=False,
-                         need_email=False,
-                         is_flexible=False,
-                         prices=[LabeledPrice(label=l,amount=int(50000))],
-                         start_parameter='start_parameter',
-                         payload=l,
-                         reply_markup=keyboard
-                         )
+                        title=t,
+                        description=d,
+                        provider_token=YOOTOKEN,
+                        currency='RUB',
+                        send_email_to_provider = True,
+                        need_email=True,
+                        provider_data={
+                            'receipt': {
+                                'items': [
+                                    {
+                                        'description': 'Подписка на vk_auto_posting',
+                                        'quantity': '1',
+                                        'amount': {"value": 500.00, "currency": "RUB"},
+                                        'vat_code': 1
+                                    }
+                                ],
+                                'total': 50000,
+                                'payments': [
+                                    {
+                                        'type': 'card',
+                                        'sum': 50000
+                                    }
+                                ]
+                            }
+                        },
+                        prices=[LabeledPrice(label=t, amount=10000)],
+                        payload=t,
+                        reply_markup=keyboard)
+
+
+
     elif pay_num[1] == '3':
-        keyboard.add(InlineKeyboardButton("Заплатить 500,00 RUB", pay=True))
+        keyboard.add(InlineKeyboardButton("Заплатить 1200.00 RUB", pay=True))
         keyboard.add(back)
         if pay_num[2] == 'Buy':
             t='Оформление подписки на 3 месяца'
             c = datetime.utcfromtimestamp(float(time.time() + day_to_sec(92)))
             d = f"до {c.day}.{c.month}.{c.year}"
-            l='Оформление подписки на 3 месяца'
         elif pay_num[2] == 'renewal':
             t = 'Продление подписки на 3 месяца'
             subscripti = await db_select_sys('subscription', callback_query.from_user.id)
             c = datetime.utcfromtimestamp(float(subscripti[0]) + day_to_sec(92))
             d = f"до {c.day}.{c.month}.{c.year}"
-            l = 'Продление подписки на 3 месяца'
         await bot.send_invoice(chat_id=callback_query.from_user.id,
                                title=t,
                                description=d,
                                provider_token=YOOTOKEN,
                                currency='RUB',
-                               photo_url=None,
-                               need_phone_number=False,
-                               need_email=False,
-                               is_flexible=False,
-                               prices=[LabeledPrice(label=l, amount=int(120000))],
-                               start_parameter='3_months',
-                               payload=l,
-                               reply_markup=keyboard
-                               )
+                               send_email_to_provider=True,
+                               need_email=True,
+                               provider_data={
+                                   'receipt': {
+                                       'items': [
+                                           {
+                                               'description': 'Подписка на vk_auto_posting',
+                                               'quantity': '1',
+                                               'amount': {"value": 1200.00, "currency": "RUB"},
+                                               'vat_code': 1
+                                           }
+                                       ],
+                                       'total': 120000,
+                                       'payments': [
+                                           {
+                                               'type': 'card',
+                                               'sum': 120000
+                                           }
+                                       ]
+                                   }
+                               },
+                               prices=[LabeledPrice(label=t, amount=120000)],
+                               payload=t,
+                               reply_markup=keyboard)
     elif pay_num[1] == '6':
-        keyboard.add(InlineKeyboardButton("Заплатить 500,00 RUB", pay=True))
+        keyboard.add(InlineKeyboardButton("Заплатить 2550.00 RUB", pay=True))
         keyboard.add(back)
         if pay_num[2] == 'Buy':
             t='Оформление подписки на 6 месяцев'
             c = datetime.utcfromtimestamp(float(time.time() + day_to_sec(182)))
             d = f"до {c.day}.{c.month}.{c.year}"
-            l='Оформление подписки на 6 месяцев'
         elif pay_num[2] == 'renewal':
             t = 'Продление подписки на 6 месяцев'
             subscripti = await db_select_sys('subscription', callback_query.from_user.id)
             c = datetime.utcfromtimestamp(float(subscripti[0]) + day_to_sec(182))
             d = f"до {c.day}.{c.month}.{c.year}"
-            l = 'Продление подписки на 6 месяцев'
         await bot.send_invoice(chat_id=callback_query.from_user.id,
                                title=t,
                                description=d,
                                provider_token=YOOTOKEN,
                                currency='RUB',
-                               photo_url=None,
-                               need_phone_number=False,
-                               need_email=False,
-                               is_flexible=False,
-                               prices=[LabeledPrice(label=l, amount=int(255000))],
-                               start_parameter='6_months',
-                               payload=l,
-                               reply_markup=keyboard
-                               )
+                               send_email_to_provider=True,
+                               need_email=True,
+                               provider_data={
+                                   'receipt': {
+                                       'items': [
+                                           {
+                                               'description': 'Подписка на vk_auto_posting',
+                                               'quantity': '1',
+                                               'amount': {"value": 2550.00, "currency": "RUB"},
+                                               'vat_code': 1
+                                           }
+                                       ],
+                                       'total': 255000,
+                                       'payments': [
+                                           {
+                                               'type': 'card',
+                                               'sum': 255000
+                                           }
+                                       ]
+                                   }
+                               },
+                               prices=[LabeledPrice(label=t, amount=255000)],
+                               payload=t,
+                               reply_markup=keyboard)
     elif pay_num[1] == '12':
-        keyboard.add(InlineKeyboardButton("Заплатить 500,00 RUB", pay=True))
+        keyboard.add(InlineKeyboardButton("Заплатить 4800.00 RUB", pay=True))
         keyboard.add(back)
         if pay_num[2] == 'Buy':
             t='Оформление подписки на 12 месяцев'
             c = datetime.utcfromtimestamp(float(time.time() + day_to_sec(365)))
             d = f"до {c.day}.{c.month}.{c.year}"
-            l='Оформление подписки на 12 месяцев'
         elif pay_num[2] == 'renewal':
             t = 'Продление подписки на 12 месяцев'
             subscripti = await db_select_sys('subscription', callback_query.from_user.id)
             c = datetime.utcfromtimestamp(float(subscripti[0]) + day_to_sec(365))
             d = f"до {c.day}.{c.month}.{c.year}"
-            l = 'Продление подписки на 12 месяцев'
         await bot.send_invoice(chat_id=callback_query.from_user.id,
                                title=t,
                                description=d,
                                provider_token=YOOTOKEN,
                                currency='RUB',
-                               photo_url=None,
-                               need_phone_number=False,
-                               need_email=False,
-                               is_flexible=False,
-                               prices=[LabeledPrice(label=l, amount=int(480000))],
-                               start_parameter='12_months',
-                               payload=l,
-                               reply_markup=keyboard
-                               )
+                               send_email_to_provider=True,
+                               need_email=True,
+                               provider_data={
+                                   'receipt': {
+                                       'items': [
+                                           {
+                                               'description': 'Подписка на vk_auto_posting',
+                                               'quantity': '1',
+                                               'amount': {"value": 4800.00, "currency": "RUB"},
+                                               'vat_code': 1
+                                           }
+                                       ],
+                                       'total': 480000,
+                                       'payments': [
+                                           {
+                                               'type': 'card',
+                                               'sum': 480000
+                                           }
+                                       ]
+                                   }
+                               },
+                               prices=[LabeledPrice(label=t, amount=480000)],
+                               payload=t,
+                               reply_markup=keyboard)
+
 #
 ######## ХЗ ЧЕ ЭТО, НО БЕЗ НЕГО НЕ РАБОТАЕТ ########
 @dp.pre_checkout_query_handler()
 async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery):
-    await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)#########################################################################################################
-
+    try:
+        print(pre_checkout_query.values['order_info'].values['email'], pre_checkout_query.values['from'].id,
+              pre_checkout_query.values['from'].mention, pre_checkout_query.values['from'].first_name,
+              pre_checkout_query.values['from'].full_name, pre_checkout_query.values['from'].url,
+              pre_checkout_query.values['total_amount'], pre_checkout_query.values['invoice_payload'])
+        await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
+    except:
+        print(pre_checkout_query.values['order_info'].values['email'], pre_checkout_query.values['from'].id,
+              pre_checkout_query.values['from'].mention, pre_checkout_query.values['from'].first_name,
+              pre_checkout_query.values['from'].full_name, pre_checkout_query.values['from'].url,
+              pre_checkout_query.values['total_amount'], pre_checkout_query.values['invoice_payload'])
+        await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=False, error_message=f'При оплате произошла ошибка. Проверьте верность введенных данных и наличие на вашей карте {str(pre_checkout_query.values["total_amount"])[:-2]} рублей для оплаты.\nЕсть вопросы или проблемы: -> @kleget')
 ######## ЕСЛИ ОПЛАТА ПРОШЛА УСПЕШНО, ТО СРАБАТЫВАЕТ ЭТОТ БОЛОК КОДА ########
 @dp.message_handler(content_types=ContentType.SUCCESSFUL_PAYMENT)
 async def process_pay (message: types.Message):
@@ -233,7 +294,7 @@ async def process_pay (message: types.Message):
 def day_to_sec(day):# возвраящает дни в секундах
     return day*60*60*24+3600*3
 
-@dp.callback_query_handler(lambda c: c.data.startswith('backpr'))
+@dp.callback_query_handler(lambda c: c.data.startswith('back_p'))
 async def process_callback_check_pay(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
     back_pr_num = callback_query.data.split(':')
@@ -241,6 +302,9 @@ async def process_callback_check_pay(callback_query: types.CallbackQuery):
         await process_callback_check_subs_1(callback_query.from_user.id, callback_query.message.message_id)
     elif back_pr_num[1] == '2':
         await bot.delete_message(callback_query.from_user.id, callback_query.message.message_id)
+    elif back_pr_num[1] == '3':
+        await main.start(callback_query.from_user.id)
+
 
 ################# ПРОВЕРКА ПОДПИСКИ НА СПОНСОРОВ ##############
 async def subscription_verification(id):
