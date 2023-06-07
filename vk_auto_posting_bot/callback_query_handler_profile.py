@@ -244,17 +244,23 @@ async def process_callback_Pay(callback_query: types.CallbackQuery):
 @dp.pre_checkout_query_handler()
 async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery):
     try:
-        print(pre_checkout_query.values['order_info'].values['email'], pre_checkout_query.values['from'].id,
+        a = [pre_checkout_query.values['order_info'].values['email'], pre_checkout_query.values['from'].id,
               pre_checkout_query.values['from'].mention, pre_checkout_query.values['from'].first_name,
               pre_checkout_query.values['from'].full_name, pre_checkout_query.values['from'].url,
-              pre_checkout_query.values['total_amount'], pre_checkout_query.values['invoice_payload'])
+              pre_checkout_query.values['total_amount'], pre_checkout_query.values['invoice_payload']]
+        await bot.send_message(chat_id='-1001659683421', text=a)
         await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
     except:
-        print(pre_checkout_query.values['order_info'].values['email'], pre_checkout_query.values['from'].id,
-              pre_checkout_query.values['from'].mention, pre_checkout_query.values['from'].first_name,
-              pre_checkout_query.values['from'].full_name, pre_checkout_query.values['from'].url,
-              pre_checkout_query.values['total_amount'], pre_checkout_query.values['invoice_payload'])
+        try:
+            a = [pre_checkout_query.values['order_info'].values['email'], pre_checkout_query.values['from'].id,
+                 pre_checkout_query.values['from'].mention, pre_checkout_query.values['from'].first_name,
+                 pre_checkout_query.values['from'].full_name, pre_checkout_query.values['from'].url,
+                 pre_checkout_query.values['total_amount'], pre_checkout_query.values['invoice_payload']]
+            await bot.send_message(chat_id='-1001659683421', text=a)
+        except:
+            pass
         await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=False, error_message=f'При оплате произошла ошибка. Проверьте верность введенных данных и наличие на вашей карте {str(pre_checkout_query.values["total_amount"])[:-2]} рублей для оплаты.\nЕсть вопросы или проблемы: -> @kleget')
+
 ######## ЕСЛИ ОПЛАТА ПРОШЛА УСПЕШНО, ТО СРАБАТЫВАЕТ ЭТОТ БОЛОК КОДА ########
 @dp.message_handler(content_types=ContentType.SUCCESSFUL_PAYMENT)
 async def process_pay (message: types.Message):
