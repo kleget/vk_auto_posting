@@ -17,7 +17,7 @@ async def process_callback_check_subs_1(user_id, message_id):
         sql.execute(f"SELECT * FROM users WHERE chat_id == {str(user_id)}")
         b = sql.fetchall()
     subscription = await db_select_sys('subscription', user_id)
-    back = InlineKeyboardButton(text="меню", callback_data='back_p:1')
+    back = InlineKeyboardButton(text="меню", callback_data='back_p:3')
     if subscription[0] == 'отсутствует':
         button1 = InlineKeyboardButton(text="Купить подписку", callback_data='Buy_a_subscription:Buy')
     else:
@@ -50,7 +50,7 @@ async def process_callback_Buy_a_subscription_1(user_id, message_id, num, subs):
     three_month_period = InlineKeyboardButton(text="3 мес - 1200руб (-10%)", callback_data=f'Pay:3:{subs}')
     six_month_period = InlineKeyboardButton(text="6 мес - 2550 руб (-15%)", callback_data=f'Pay:6:{subs}')
     twelve_month_period = InlineKeyboardButton(text="12 мес - 4800 руб (-20%)", callback_data=f'Pay:12:{subs}')
-    back = InlineKeyboardButton(text="Назад", callback_data=f'backpr:1:{subs}')
+    back = InlineKeyboardButton(text="Назад", callback_data=f'back_p:1:{subs}')
     keyboard1 = InlineKeyboardMarkup(row_width=1).add(one_month_period, three_month_period, six_month_period, twelve_month_period, back)
     if subs == 'Buy':
         if num != 0:
@@ -69,7 +69,7 @@ async def process_callback_Pay(callback_query: types.CallbackQuery):
     pay_num = callback_query.data.split(':')
     keyboard = InlineKeyboardMarkup()
     t, d, l = '-', '-', '-'
-    back = InlineKeyboardButton(text="Назад", callback_data=f'backpr:2:{pay_num[2]}')
+    back = InlineKeyboardButton(text="Назад", callback_data=f'back_p:2:{pay_num[2]}')
     if pay_num[1] == '1':
         keyboard.add(InlineKeyboardButton("Заплатить 500.00 RUB", pay=True))
         keyboard.add(back)
@@ -303,7 +303,7 @@ async def process_callback_check_pay(callback_query: types.CallbackQuery):
     elif back_pr_num[1] == '2':
         await bot.delete_message(callback_query.from_user.id, callback_query.message.message_id)
     elif back_pr_num[1] == '3':
-        await main.start(callback_query.from_user.id)
+        await main.menu_2(callback_query.from_user.id, callback_query.message.message_id)
 
 
 ################# ПРОВЕРКА ПОДПИСКИ НА СПОНСОРОВ ##############
