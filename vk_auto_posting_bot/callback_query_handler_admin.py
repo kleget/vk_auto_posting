@@ -50,11 +50,17 @@ async def sponsor_management_2(msg_id):
     keyboard = []
     while '' in sponsor_list:
         sponsor_list.remove('')
+    # if len(sponsor_list) == 0:
+    #     keyboard = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton('Добавить спонсора', callback_data=f'add_sponsor:{len(sponsor_list) + 1}'))
     if len(sponsor_list) >= 1:
         listt = [types.InlineKeyboardButton(sponsor_list[x], callback_data=f'sponsor#{sponsor_list[x]}#{x+1}') for x in range(len(sponsor_list))]
         keyboard = InlineKeyboardMarkup(row_width=1).add(*listt)
-    if len(sponsor_list) <= 5:
-        keyboard.add(InlineKeyboardButton('Добавить спонсора', callback_data=f'add_sponsor:{len(sponsor_list)+1}'))
+    if len(sponsor_list) <= 5 and len(sponsor_list) >= 0:
+        if len(sponsor_list) == 0:
+            keyboard = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton('Добавить спонсора', callback_data=f'add_sponsor:{len(sponsor_list)+1}'))
+        else:
+            keyboard.add(InlineKeyboardButton('Добавить спонсора', callback_data=f'add_sponsor:{len(sponsor_list) + 1}'))
+
     keyboard.add(InlineKeyboardButton('Назад', callback_data=f'back:6'))
     if msg_id != '0':
         await bot.edit_message_text(chat_id='1277447609', text='Спонсоры:', message_id=msg_id, reply_markup=keyboard)
