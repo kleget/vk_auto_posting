@@ -32,8 +32,8 @@ import datetime as dt
 #
 ######## CONST ########
 TOKEN = '*******************************************'
-# YOOTOKEN = "381764678:TEST:55345" #test
-YOOTOKEN = "390540012:LIVE:33599" #live
+# YOOTOKEN = "*****************" #test
+YOOTOKEN = "**************" #live
 v = 5.131
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN)
